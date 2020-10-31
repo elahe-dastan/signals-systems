@@ -27,26 +27,26 @@ def convolve(a, b):
 # a)
 t = np.arange(-10, 10, 0.1)
 
-# x = []
-# for i in t:
-#     x.append(1 / 2 * math.exp(-2 * i) * np.heaviside(i, 1))
-#
-# h = np.heaviside(t, 1) - np.heaviside(t - 5, 1)
-#
-# plt.plot(convolve(x, h))
-# plt.show()
+x = []
+for i in t:
+    x.append(1 / 2 * math.exp(-2 * i) * np.heaviside(i, 1))
+
+h = np.heaviside(t, 1) - np.heaviside(t - 5, 1)
+
+plt.plot(convolve(x, h))
+plt.show()
 
 # b)
-# n = np.arange(-5, 11, 1)
-#
-# x = []
-# for i in n:
-#     x.append(math.pow(1/3, -i) * np.heaviside(-i - 1, 1))
-#
-# h = np.heaviside(n - 1, 1)
-#
-# plt.plot(convolve(x, h))
-# plt.show()
+n = np.arange(-5, 11, 1)
+
+x = []
+for i in n:
+    x.append(math.pow(1/3, -i) * np.heaviside(-i - 1, 1))
+
+h = np.heaviside(n - 1, 1)
+
+plt.plot(convolve(x, h))
+plt.show()
 
 # c)
 n = np.arange(-5, 11, 1)
