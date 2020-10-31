@@ -25,8 +25,8 @@ def convolve(a, b):
 
 # The second part of the question
 # a)
-# t = np.arange(-10, 10, 0.1)
-#
+t = np.arange(-10, 10, 0.1)
+
 # x = []
 # for i in t:
 #     x.append(1 / 2 * math.exp(-2 * i) * np.heaviside(i, 1))
@@ -41,11 +41,23 @@ def convolve(a, b):
 #
 # x = []
 # for i in n:
-#     x.append(math.pow(1/3, -n[i]) * np.heaviside(-n[i] - 1, 1))
+#     x.append(math.pow(1/3, -i) * np.heaviside(-i - 1, 1))
 #
 # h = np.heaviside(n - 1, 1)
 #
 # plt.plot(convolve(x, h))
 # plt.show()
+
+# c)
+n = np.arange(-5, 11, 1)
+
+x = [1, 1, 1, 0, 0, 1, 1, 1]
+
+h = []
+for i in n:
+    h.append(math.pow(1/3, i) * np.heaviside(i, 1))
+
+plt.plot(convolve(x, h))
+plt.show()
 
 
