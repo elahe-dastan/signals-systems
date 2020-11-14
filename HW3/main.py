@@ -9,12 +9,13 @@ def coefficient(T, x, y, c):
     step = 0.001
     t = np.arange(start, end, step)
     ans = arr.array('d', [])
+    w0 = 2 * np.pi / T
     for k in range(0, c + 1):
+        integral = 0
         for i in t:
-            w0 = 2 * np.pi / T
             partial = x(i) * y(k * w0 * i)
-            integral = partial * step
-            ans.append((2 / T) * integral)
+            integral += partial * step
+        ans.append((2 / T) * integral)
     return ans
 
 
@@ -25,9 +26,6 @@ def ak(T, x, c):
 def bk(T, x, c):
     return coefficient(T, x, np.sin, c)
 
-
-# def x(input):
-#     return input ** 2
 
 def x(input):
     T = 6
@@ -70,7 +68,7 @@ def signal(a, b, T, t):
 
 
 def plot(T, x):
-    for c in range(11):
+    for c in range(15):
         a = ak(T, x, c)
         b = bk(T, x, c)
         start = 0
@@ -84,14 +82,14 @@ def plot(T, x):
         plt.show()
 
 
-# plot(6, x)
+plot(6, x)
 
-start = 0
-end = 6
-step = 0.1
-t = np.arange(start, end, step)
-ans = arr.array('d', [])
-for i in t:
-    ans.append(x(i))
-plt.scatter(t, ans)
-plt.show()
+# start = 0
+# end = 6
+# step = 0.1
+# t = np.arange(start, end, step)
+# ans = arr.array('d', [])
+# for i in t:
+#     ans.append(x(i))
+# plt.scatter(t, ans)
+# plt.show()
