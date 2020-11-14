@@ -27,8 +27,14 @@ def bk(T, x, c):
     return coefficient(T, x, np.sin, c)
 
 
-def x(input):
+def right(input):
     T = 6
+    while input > 3:
+        input = input - T
+
+    while input < -3:
+        input = input + T
+
     if input == 3 or input == 0 or input == -3:
         return 0
     if 0 < input < 3:
@@ -36,26 +42,26 @@ def x(input):
     if -3 < input < 0:
         return 1
 
-    if input > 3:
-        while True:
-            input = input - T
-            if input == 3 or input == 0 or input == -3:
-                return 0
-            if 0 < input < 3:
-                return -1
-            if -3 < input < 0:
-                return 1
 
-    if input < -3:
-        while True:
-            input = input + T
-            if input == 3 or input == 0 or input == -3:
-                return 0
-            if 0 < input < 3:
-                return -1
-            if -3 < input < 0:
-                return 1
+def left(input):
+    T = 6
+    while input > 3:
+        input = input - T
 
+    while input < -3:
+        input = input + T
+
+    if (-3 <= input <= -2) or (2 <= input <= 3):
+        return 0
+
+    if -2 < input <= -1:
+        return input + 2
+
+    if 1 <= input < 2:
+        return input - 2
+
+    if -1 < input < 1:
+        return -1 * input
 
 def signal(a, b, T, t):
     sum = 0
@@ -82,7 +88,7 @@ def plot(T, x):
         plt.show()
 
 
-plot(6, x)
+plot(6, left)
 
 # start = 0
 # end = 6
@@ -90,6 +96,6 @@ plot(6, x)
 # t = np.arange(start, end, step)
 # ans = arr.array('d', [])
 # for i in t:
-#     ans.append(x(i))
+#     ans.append(left(i))
 # plt.scatter(t, ans)
 # plt.show()
