@@ -1,33 +1,54 @@
 import numpy as np
-import array as arr
 import matplotlib.pyplot as plt
 
 
-def coefficient(T, x, y, c):
-    start = 0
-    end = T
-    step = 0.001
-    t = np.arange(start, end, step)
-    ans = arr.array('d', [])
-    w0 = 2 * np.pi / T
-    for k in range(0, c + 1):
-        integral = 0
-        for i in t:
-            partial = x(i) * y(k * w0 * i)
-            integral += partial * step
-        ans.append((2 / T) * integral)
-    return ans
+class Fourier:
+    '''
+    Fourier implements fourier transform for a single variable function.
+    The function is given by the transform method and then you have transformed function in return.
+    '''
 
+    def __init__(self, c: int, T: int):
+        self.c = c
+        self.T = T
 
-def ak(T, x, c):
-    return coefficient(T, x, np.cos, c)
+    def coefficients(self, x, y):
+        '''
+        Calculate fourier coefficient for given user function x and y.
+        Please note that y is np.cos or np.sin.
+        '''
+        start = 0
+        end = self.T
+        step = 0.001
+        t = np.arange(start, end, step)
+        w0 = 2 * np.pi / self.T
+        return np.vectorize(lambda k: np.sum(x(t) * y(t * k * w0)) * step * (2/self.T))(np.arange(0, self.c + 1))
 
+    def ak(self, x):
+        return self.coefficients(np.vectorize(x), np.cos)
 
-def bk(T, x, c):
-    return coefficient(T, x, np.sin, c)
+    def bk(self, x):
+        return self.coefficients(np.vectorize(x), np.sin)
+
+    def transform(self, x):
+        a = self.ak(x)
+        b = self.bk(x)
+
+        @np.vectorize
+        def _transform(t):
+            w0 = 2 * np.pi / self.T
+
+            return np.sum(a * np.insert(np.cos(w0 * t * np.arange(1, a.size)), 0, 1/2)) \
+                    + np.sum(b * np.insert(np.sin(w0 * t * np.arange(1, b.size)), 0, 0))
+
+        return _transform
+
 
 
 def right(input):
+    '''
+    Rigth is an example function based on homework question right example.
+    '''
     T = 6
     while input > 3:
         input = input - T
@@ -44,6 +65,9 @@ def right(input):
 
 
 def left(input):
+    '''
+    Left is an example function based on homework question left example.
+    '''
     T = 6
     while input > 3:
         input = input - T
@@ -63,39 +87,16 @@ def left(input):
     if -1 < input < 1:
         return -1 * input
 
-def signal(a, b, T, t):
-    sum = 0
-    sum += a[0] / 2
-    w0 = 2 * np.pi / T
-    for k in range(1, len(a)):
-        sum += a[k] * np.cos(k * w0 * t)
-        sum += b[k] * np.sin(k * w0 * t)
-    return sum
-
-
 def plot(T, x):
     for c in range(15):
-        a = ak(T, x, c)
-        b = bk(T, x, c)
+        ans = Fourier(c, T).transform(x)
         start = 0
         end = T
         step = 0.1
         t = np.arange(start, end, step)
-        ans = arr.array('d', [])
-        for i in t:
-            ans.append(signal(a, b, T, i))
-        plt.scatter(t, ans)
+        plt.scatter(t, ans(t))
         plt.show()
 
 
-plot(6, left)
-
-# start = 0
-# end = 6
-# step = 0.1
-# t = np.arange(start, end, step)
-# ans = arr.array('d', [])
-# for i in t:
-#     ans.append(left(i))
-# plt.scatter(t, ans)
-# plt.show()
+# plot(6, left)
+plot(6, right)
