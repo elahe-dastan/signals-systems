@@ -1,52 +1,33 @@
 from scipy.io import wavfile
-from scipy.fftpack import fft, ifft, fftfreq
+from scipy.fftpack import fft
 from matplotlib import pyplot as plt
-import wave
+import matplotlib as mpl
+import sys
 
 HIDDEN_CODE_START_INDEX = 300000
 
 # get the file sample rate and data
-s_rate, signal = wavfile.read('samples/sample_1.wav')
+s_rate, signal = wavfile.read('samples/' + sys.argv[1])
 
 # fast fourier transform
 FFT = fft(signal)
-
-# define frequency vector
-freqs = fftfreq(len(FFT)) * s_rate
-
-# plt.plot(freqs[range(len(FFT) // 2)], FFT[range(len(FFT) // 2)])
+FFT_code = FFT[HIDDEN_CODE_START_INDEX:]
+# plt.axis([0, 80, -1e6, 1e6])
+# plt.plot(FFT_code)
 # plt.show()
+# mpl.use('Qt5Agg')
 
-# plt.plot(freqs[range(HIDDEN_CODE_START_INDEX, len(FFT) // 2)], FFT[range(HIDDEN_CODE_START_INDEX, len(FFT) // 2)])
-# plt.xlabel("Frequency (Hz)")
-# plt.ylabel("Amplitude")
-# plt.show()
-plt.plot(FFT)
-plt.show()
-
-# make non code frequency zero
-# FFT_code_range = FFT[range(HIDDEN_CODE_START_INDEX, len(FFT) // 2)]
-
-# # FFT_code_range = FFT[range(HIDDEN_CODE_START_FREQUENCY, len(FFT) // 2)]
-# # freqs_code_range = freqs[range(HIDDEN_CODE_START_FREQUENCY, len(FFT) // 2)]
-
+code_bytes = []
+decimal = 0
+position = 128
+for i in range(0, 650, 10):
+    if i % 80 == 0 and i != 0:
+        code_bytes.append(chr(int(decimal)))
+        decimal = 0
+        position = 128
+    if FFT_code[i] > 0:
+        decimal += position
+    position /= 2
 
 
-# IFFT = ifft(FFT_code_range)
-#
-#
-# codeInBytes = IFFT.tobytes()[0:8]
-# print(codeInBytes)
-# print(type(codeInBytes))
-# for b in codeInBytes:
-#     print(type(b))
-#     print(int.from_bytes(b, byteorder="big"))
-
-# plt.plot(IFFT)
-# plt.show()
-# plot
-# plt.plot(freqs[range(len(FFT) // 2)], FFT_code_range)
-# # plt.xlim([300000, len(FFT) // 2])
-# plt.xlabel("Frequency (Hz)")
-# plt.ylabel("Amplitude")
-# plt.show()
+print(code_bytes)
